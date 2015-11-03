@@ -9,7 +9,7 @@
 //---------------------------------------------------------------------------
 bool TestReadParameterFileWithMissingValue();
 bool TestParameterFileWithPointFile();
-bool TestParameterFileWithDataTable();
+bool TestParameterFileWithGenericTable();
 
 //---------------------------------------------------------------------------
 namespace
@@ -34,11 +34,6 @@ int ModuleDescriptionTest(int argc, char * argv[])
     }
 
   if (!TestParameterFileWithPointFile())
-    {
-    return EXIT_FAILURE;
-    }
-
-  if (!TestParameterFileWithDataTable())
     {
     return EXIT_FAILURE;
     }
@@ -176,67 +171,3 @@ bool TestParameterFileWithPointFile()
 
   return true;
 }
-
-//---------------------------------------------------------------------------
-bool TestParameterFileWithDataTable()
-{
-  std::string input = INPUT_DIR
-      + "/parameter-file-with-datatable-slicer-issue3912.params";
-
-  ModuleParameterGroup group;
-
-  {
-    ModuleParameter parameter;
-    parameter.SetName("Input Data Table File");
-    parameter.SetDefault("input.dcsv");
-    parameter.SetTag("datatable");
-    parameter.SetMultiple("false");
-    parameter.SetFileExtensionsAsString(".dcsv");
-    parameter.SetChannel("input");
-    group.AddParameter(parameter);
-  }
-
-  {
-    ModuleParameter parameter;
-    parameter.SetName("Output Data Table File");
-    parameter.SetDefault("output.dcsv");
-    parameter.SetTag("datatable");
-    parameter.SetMultiple("false");
-    parameter.SetFileExtensionsAsString(".dcsv");
-    parameter.SetChannel("output");
-    group.AddParameter(parameter);
-  }
-
-  ModuleDescription desc;
-  desc.AddParameterGroup(group);
-
-  if (!desc.HasParameter("Input Data Table File") || !desc.HasParameter("Output Data Table File"))
-    {
-    std::cerr << "Line " << __LINE__
-              << " - Parameters are expected."
-              << std::endl;
-    return false;
-    }
-  if (!desc.WriteParameterFile(input, true))
-    {
-    std::cerr << "Line " << __LINE__
-              << " - Unable to write parameter file "
-              << input
-              << std::endl;
-    return false;
-    }
-
-  ModuleDescription readDesc;
-  if (readDesc.ReadParameterFile(input))
-    {
-    std::cerr << "Line " << __LINE__
-              << " - Unable to read parameter file, something changed"
-              << ", but it was reading into an empty description "
-              << input
-              << std::endl;
-    return false;
-    }
-
-  return true;
-}
-

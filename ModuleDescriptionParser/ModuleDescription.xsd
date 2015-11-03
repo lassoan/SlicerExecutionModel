@@ -46,7 +46,6 @@
         <xsd:element name="geometry" type="typedIndexParamType"/>
         <xsd:element name="table" type="typedIndexParamType"/>
         <xsd:element name="measurement" type="typedIndexParamType"/>
-        <xsd:element name="datatable" type="typedIndexParamType"/>
       </xsd:choice>
     </xsd:complexType>
 
